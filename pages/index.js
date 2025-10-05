@@ -80,7 +80,7 @@ export default function Home({ newProjects, commercial, residential }) {
                     href="https://wa.me/919811677423"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-secondary btn-large bg-white text-brand-dark-blue hover:bg-brand-gold hover:text-white border-2 border-white transform transition-all duration-300 hover:shadow-2xl"
+                    className="btn btn-secondary btn-large bg-brand-dark-blue text-white hover:bg-brand-gold hover:text-white border-2 border-white transform transition-all duration-300 hover:shadow-2xl"
                   >
                     <MessageCircle size={20} className="sm:w-6 sm:h-6 animate-bounce-gentle" />
                     <span className="text-sm sm:text-base">WhatsApp Now</span>
