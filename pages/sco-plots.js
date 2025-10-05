@@ -1,11 +1,10 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import PropertyCard from '../components/PropertyCard';
-import { featuredProjects } from '../data/properties';
+import { fetchProperties } from '../lib/api';
 import { Building2, TrendingUp, MapPin, Clock } from 'lucide-react';
 
-export default function SCOPlots() {
-  const scoProperties = featuredProjects;
+export default function SCOPlots({ scoProperties }) {
   return (
     <Layout>
       <Head>
@@ -209,4 +208,13 @@ export default function SCOPlots() {
       </section>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  const scoProperties = await fetchProperties('sco');
+  return {
+    props: {
+      scoProperties,
+    },
+  };
 }

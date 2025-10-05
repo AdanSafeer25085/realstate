@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import PropertyCard from '../components/PropertyCard';
-import { residentialProperties } from '../data/properties';
+import { fetchProperties } from '../lib/api';
 import { Home, Users, Shield, Wifi } from 'lucide-react';
 
-export default function Residential() {
+export default function Residential({ properties }) {
   return (
     <Layout>
       <Head>
@@ -44,7 +44,7 @@ export default function Residential() {
       <section className="py-16">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {residentialProperties.length > 0 ? residentialProperties.map((property) => (
+            {properties.length > 0 ? properties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             )) : (
               <div className="col-span-full text-center py-12">
@@ -151,4 +151,13 @@ export default function Residential() {
       </section>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  const properties = await fetchProperties('residential');
+  return {
+    props: {
+      properties,
+    },
+  };
 }

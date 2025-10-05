@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import PropertyCard from '../components/PropertyCard';
-import { commercialProperties } from '../data/properties';
+import { fetchProperties } from '../lib/api';
 import { Building, TrendingUp, MapPin } from 'lucide-react';
 
-export default function Commercial() {
+export default function Commercial({ properties }) {
   return (
     <Layout>
       <Head>
@@ -44,7 +44,7 @@ export default function Commercial() {
       <section className="py-16">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {commercialProperties.length > 0 ? commercialProperties.map((property) => (
+            {properties.length > 0 ? properties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             )) : (
               <div className="col-span-full text-center py-12">
@@ -113,4 +113,13 @@ export default function Commercial() {
       </section>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  const properties = await fetchProperties('commercial');
+  return {
+    props: {
+      properties,
+    },
+  };
 }

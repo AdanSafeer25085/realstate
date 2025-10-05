@@ -5,14 +5,10 @@ import TypingAnimation from '../components/animations/TypingAnimation';
 import FadeIn from '../components/animations/FadeIn';
 import StaggeredAnimation from '../components/animations/StaggeredAnimation';
 import HoverAnimation from '../components/animations/HoverAnimation';
-import { commercialProperties, residentialProperties, featuredProjects } from '../data/properties';
+import { fetchProperties } from '../lib/api';
 import { Phone, MessageCircle } from 'lucide-react';
 
-export default function Home() {
-  // Use the updated property data from data/properties.js
-  const newProjects = featuredProjects; // SCO plots as new/upcoming projects
-  const commercial = commercialProperties; // All 6 commercial properties
-  const residential = residentialProperties; // All 5 residential properties
+export default function Home({ newProjects, commercial, residential }) {
 
   return (
     <Layout>
@@ -176,4 +172,25 @@ export default function Home() {
       </section>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  // Fetch properties from database
+  const [allProperties, commercialProps, residentialProps, scoProps] = await Promise.all([
+    fetchProperties(),
+    fetchProperties('commercial'),
+    fetchProperties('residential'),
+    fetchProperties('sco')
+  ]);
+
+  // Filter featured projects for homepage
+  const featuredProps = allProperties.filter(p => p.featured);
+
+  return {
+    props: {
+      newProjects: scoProps.length > 0 ? scoProps : featuredProps,
+      commercial: commercialProps,
+      residential: residentialProps,
+    },
+  };
 }

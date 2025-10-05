@@ -98,6 +98,12 @@ export default function About() {
                       </a>
                     </div>
                     <div className="flex items-center">
+                      <Phone size={20} className="text-brand-gold mr-3" />
+                      <a href="tel:+919811677423" className="text-brand-dark-blue hover:text-brand-gold">
+                        +91 85276 30122
+                      </a>
+                    </div>
+                    <div className="flex items-center">
                       <MessageCircle size={20} className="text-brand-gold mr-3" />
                       <a href="mailto:deepak@heliosland.in" className="text-brand-dark-blue hover:text-brand-gold">
                         deepak@heliosland.in

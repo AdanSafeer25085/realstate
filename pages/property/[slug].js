@@ -1,11 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
-import {
-  commercialProperties,
-  residentialProperties,
-  featuredProjects,
-} from "../../data/properties";
+import { fetchPropertyBySlug } from '../../lib/api';
 import {
   Phone,
   MessageCircle,
@@ -423,15 +419,8 @@ export default function PropertyDetail({ property }) {
 export async function getServerSideProps({ params }) {
   const { slug } = params;
 
-  // Combine all properties from static data
-  const allProperties = [
-    ...commercialProperties,
-    ...residentialProperties,
-    ...featuredProjects,
-  ];
-
-  // Find property by slug
-  const property = allProperties.find((p) => p.slug === slug);
+  // Fetch property from database by slug
+  const property = await fetchPropertyBySlug(slug);
 
   if (!property) {
     return {
