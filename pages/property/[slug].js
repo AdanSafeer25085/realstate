@@ -3,30 +3,28 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { fetchPropertyBySlug } from '../../lib/api';
 import {
-  Phone,
-  MessageCircle,
-  MapPin,
-  Bed,
-  Bath,
-  Square,
-  Calendar,
-  Download,
-  Share2,
   ChevronLeft,
   ChevronRight,
+  X,
+  Clock,
+  CheckCircle,
+  Building,
+  Diamond,
+  Headphones,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-export default function PropertyDetail({ property }) {
+export default function PropertyDetail({ property, propertyDetails }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
-    message: "",
   });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   if (router.isFallback) {
     return <div>Loading...</div>;
@@ -35,6 +33,16 @@ export default function PropertyDetail({ property }) {
   if (!property) {
     return <div>Property not found</div>;
   }
+
+  const {
+    summary = {},
+    highlights = [],
+    features = [],
+    priceList = [],
+    locationDetails = [],
+    developerInfo = {},
+    commitments = []
+  } = propertyDetails || {};
 
   const handleChange = (e) => {
     setFormData({
@@ -45,51 +53,49 @@ export default function PropertyDetail({ property }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Simple form submission without database
     alert(
       "Thank you for your inquiry! We have received your details and will contact you soon."
     );
-
-    // Reset form
     setFormData({
       name: "",
       phone: "",
       email: "",
-      message: "",
     });
   };
 
-  const handleScheduleVisit = () => {
-    const message = `Hi, I would like to schedule a site visit for ${property.title}. Please let me know available dates.`;
-    window.open(
-      `https://wa.me/919811677423?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
-  };
-
-  const handleDownloadBrochure = () => {
-    alert("Brochure download will be available soon!");
-  };
-
   const nextImage = () => {
-    if (property.gallery && property.gallery.length > 0) {
+    if (property.property_gallery && property.property_gallery.length > 0) {
       setCurrentImageIndex((prev) =>
-        prev === property.gallery.length - 1 ? 0 : prev + 1
+        prev === property.property_gallery.length - 1 ? 0 : prev + 1
       );
     }
   };
 
   const prevImage = () => {
-    if (property.gallery && property.gallery.length > 0) {
+    if (property.property_gallery && property.property_gallery.length > 0) {
       setCurrentImageIndex((prev) =>
-        prev === 0 ? property.gallery.length - 1 : prev - 1
+        prev === 0 ? property.property_gallery.length - 1 : prev - 1
       );
     }
   };
 
-  const goToImage = (index) => {
+
+  const openGallery = (index = 0) => {
     setCurrentImageIndex(index);
+    setIsGalleryOpen(true);
+  };
+
+  const closeGallery = () => {
+    setIsGalleryOpen(false);
+  };
+
+  const commitmentIcons = {
+    'Timely Delivery': Clock,
+    'World-Class Quality': CheckCircle,
+    'Contemporary Designs': Building,
+    'Top Class Partners': Users,
+    'Best Customer Support': Headphones,
+    'Value Creations': Diamond,
   };
 
   return (
@@ -102,150 +108,127 @@ export default function PropertyDetail({ property }) {
         />
       </Head>
 
-      {/* Property Header */}
-      <section className="py-8 bg-brand-light-gray">
-        <div className="container">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-brand-dark-blue mb-2">
-                {property.title}
-              </h1>
-              <div className="flex items-center text-gray-600 mb-4">
-                <MapPin size={18} className="mr-2" />
-                <span>{property.location}</span>
-              </div>
+      {/* Hero Section */}
+      <section
+        className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
+        style={{
+          backgroundImage: `url('${property.hero_image || property.image}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+        {/* Content */}
+        <div className="container relative z-10">
+          <div className="max-w-4xl">
+            <div className="mb-4">
+              <span className="text-sm uppercase tracking-wider text-brand-gold font-medium">
+                {property.property_subtitle || property.type.toUpperCase()}
+              </span>
             </div>
+            <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+              {property.title}
+            </h1>
+            <div className="text-lg md:text-xl mb-8 text-gray-200">
+              <span className="uppercase tracking-wide font-medium">{property.type} - {property.location}</span>
+            </div>
+
+            {/* Highlights */}
+            {highlights.length > 0 && (
+              <div className="space-y-3 mb-8">
+                {highlights.slice(0, 4).map((highlight, index) => (
+                  <div key={index} className="flex items-center">
+                    <CheckCircle size={20} className="text-brand-gold mr-3 flex-shrink-0" />
+                    <span className="text-white">{highlight.highlight_text}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              onClick={() => document.getElementById('contact-form').scrollIntoView({ behavior: 'smooth' })}
+              className="bg-brand-gold text-black px-8 py-3 rounded font-semibold hover:bg-yellow-400 transition-colors"
+            >
+              SCHEDULE SITE VISIT
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Property Details */}
-      <section className="py-12">
+      {/* SCO Plots Summary & Contact Form Section */}
+      <section className="py-16 bg-white">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
+            {/* Summary */}
             <div className="lg:col-span-2">
-              {/* Property Image */}
-              <div className="relative h-96 rounded-lg overflow-hidden mb-8">
-                <Image
-                  src={property.image}
-                  alt={property.title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-4 left-4 bg-brand-gold text-white px-3 py-1 rounded text-sm font-semibold">
-                  {property.type.toUpperCase()}
-                </div>
-                {property.featured && (
-                  <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded text-sm font-semibold">
-                    Featured
-                  </div>
-                )}
+              <div className="mb-4">
+                <span className="text-sm uppercase tracking-wider text-gray-600">
+                  {property.title}
+                </span>
               </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+                SCO PLOTS SUMMARY
+              </h2>
 
-              {/* Property Specifications */}
-              {property.bedrooms && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  <div className="bg-brand-light-gray p-4 rounded-lg text-center">
-                    <Bed size={24} className="mx-auto mb-2 text-brand-gold" />
-                    <div className="font-semibold text-brand-dark-blue">
-                      {property.bedrooms}
-                    </div>
-                    <div className="text-sm text-gray-600">Bedrooms</div>
+              {/* Summary Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Developer</h3>
+                    <p className="text-gray-700">{summary.developer || 'Capital Group'}</p>
                   </div>
-                  <div className="bg-brand-light-gray p-4 rounded-lg text-center">
-                    <Bath size={24} className="mx-auto mb-2 text-brand-gold" />
-                    <div className="font-semibold text-brand-dark-blue">
-                      {property.bathrooms}
-                    </div>
-                    <div className="text-sm text-gray-600">Bathrooms</div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Area</h3>
+                    <p className="text-gray-700">{summary.area || property.area}</p>
                   </div>
-                  <div className="bg-brand-light-gray p-4 rounded-lg text-center">
-                    <Square
-                      size={24}
-                      className="mx-auto mb-2 text-brand-gold"
-                    />
-                    <div className="font-semibold text-brand-dark-blue">
-                      {property.area}
-                    </div>
-                    <div className="text-sm text-gray-600">Area</div>
-                  </div>
-                  <div className="bg-brand-light-gray p-4 rounded-lg text-center">
-                    <MapPin
-                      size={24}
-                      className="mx-auto mb-2 text-brand-gold"
-                    />
-                    <div className="font-semibold text-brand-dark-blue">
-                      {property.type}
-                    </div>
-                    <div className="text-sm text-gray-600">Type</div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Current Status</h3>
+                    <p className="text-gray-700">{summary.current_status || 'Ongoing'}</p>
                   </div>
                 </div>
-              )}
 
-              {/* Description */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-brand-dark-blue mb-4">
-                  Property Description
-                </h2>
-                <div className="text-gray-700 space-y-4">
-                  {property.description}
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Property Type</h3>
+                    <p className="text-gray-700">{summary.property_type || 'Commercial Property'}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Price</h3>
+                    <p className="text-gray-700">{summary.price || property.price}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Ownership</h3>
+                    <p className="text-gray-700">{summary.ownership || 'Freehold'}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Key Features */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-brand-dark-blue mb-4">
-                  Key Features
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <ul className="space-y-2">
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      Prime location in {property.location}
-                    </li>
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      Modern architecture and design
-                    </li>
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      Excellent connectivity
-                    </li>
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      High-quality construction
-                    </li>
-                  </ul>
-                  <ul className="space-y-2">
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      24/7 security
-                    </li>
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      Power backup
-                    </li>
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      Ample parking space
-                    </li>
-                    <li className="flex items-center">
-                      <span className="w-2 h-2 bg-brand-gold rounded-full mr-3"></span>
-                      Investment potential
-                    </li>
-                  </ul>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Type</h3>
+                    <p className="text-gray-700">{summary.type || property.type}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Land Area</h3>
+                    <p className="text-gray-700">{summary.land_area || '7.4 Acres'}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Nearest Landmark</h3>
+                    <p className="text-gray-700">{summary.nearest_landmark || 'DLF Alameda'}</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Sidebar */}
+            {/* Contact Form */}
             <div className="lg:col-span-1">
-              {/* Contact Form */}
-              <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-                <h3 className="text-xl font-bold text-brand-dark-blue mb-4">
-                  Get More Information
-                </h3>
+              <div id="contact-form" className="bg-gray-900 text-white p-6 rounded-lg">
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-medium mb-2">INTERESTED IN SCO PLOTS?</h3>
+                  <h2 className="text-2xl font-bold">GET INSTANT CALLBACK</h2>
+                </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <input
                     type="text"
@@ -254,164 +237,319 @@ export default function PropertyDetail({ property }) {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                    className="w-full px-4 py-3 bg-transparent border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold"
                   />
                   <input
                     type="tel"
                     name="phone"
-                    placeholder="Phone Number"
+                    placeholder="Mobile NO"
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                    className="w-full px-4 py-3 bg-transparent border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold"
                   />
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email Address"
+                    placeholder="Email ID"
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                    className="w-full px-4 py-3 bg-transparent border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold"
                   />
-                  <textarea
-                    name="message"
-                    placeholder="Your Message"
-                    rows="3"
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                  ></textarea>
-                  <button type="submit" className="w-full btn btn-primary">
-                    Send Inquiry
+                  <button
+                    type="submit"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded transition-colors"
+                  >
+                    Submit
                   </button>
                 </form>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              {/* Quick Contact */}
-              <div className="bg-brand-light-gray p-6 rounded-lg">
-                <h3 className="text-lg font-bold text-brand-dark-blue mb-4">
-                  Quick Contact
-                </h3>
-                <div className="space-y-3">
-                  <a
-                    href="tel:+919811677423"
-                    className="flex items-center w-full btn btn-call"
-                  >
-                    <Phone size={18} />
-                    Call Now
-                  </a>
-                  <a
-                    href="https://wa.me/919811677423"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center w-full btn btn-whatsapp"
-                  >
-                    <MessageCircle size={18} />
-                    WhatsApp
-                  </a>
+      {/* Description Section */}
+      {property.detailed_description && (
+        <section className="py-16 bg-gray-50">
+          <div className="container">
+            <div className="max-w-4xl">
+              <div className="mb-4">
+                <span className="text-sm uppercase tracking-wider text-gray-600">
+                  BUILTUP SCO PLOTS
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+                {property.title.toUpperCase()}
+              </h2>
+              <div className="text-gray-700 text-lg leading-relaxed">
+                {property.detailed_description}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Highlights Section */}
+      {highlights.length > 0 && property.highlights_image && (
+        <section className="py-16 bg-white">
+          <div className="container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+                  HIGHLIGHTS
+                </h2>
+                <div className="space-y-4">
+                  {highlights.map((highlight, index) => (
+                    <div key={index} className="flex items-start">
+                      <span className="w-2 h-2 bg-gray-800 rounded-full mt-2 mr-4 flex-shrink-0"></span>
+                      <p className="text-gray-700">{highlight.highlight_text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative">
+                <Image
+                  src={property.highlights_image}
+                  alt="Highlights"
+                  width={600}
+                  height={400}
+                  className="rounded-lg object-cover w-full h-[400px]"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Picture Gallery */}
+      {property.property_gallery && property.property_gallery.length > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="container">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+              PICTURE GALLERY
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {property.property_gallery.slice(0, 6).map((image, index) => (
+                <div
+                  key={index}
+                  className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group"
+                  onClick={() => openGallery(index)}
+                >
+                  <Image
+                    src={image.image_url}
+                    alt={`Gallery Image ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Features Section */}
+      {features.length > 0 && property.features_image && (
+        <section className="py-16 bg-white">
+          <div className="container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="relative">
+                <Image
+                  src={property.features_image}
+                  alt="Features"
+                  width={600}
+                  height={400}
+                  className="rounded-lg object-cover w-full h-[400px]"
+                />
+              </div>
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+                  FEATURES
+                </h2>
+                <div className="space-y-4">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-start">
+                      <span className="w-2 h-2 bg-gray-800 rounded-full mt-2 mr-4 flex-shrink-0"></span>
+                      <p className="text-gray-700">{feature.feature_text}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-          {/* Location Advantages */}
-          <div>
-            <h2 className="text-2xl font-bold text-brand-dark-blue mb-4 w-[100%]">
-              Location Advantages
+        </section>
+      )}
+
+      {/* Price List & Area */}
+      {priceList.length > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="container">
+            <div className="mb-4">
+              <span className="text-sm uppercase tracking-wider text-gray-600">
+                {property.title}
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+              PRICE LIST & AREA
             </h2>
-            <div className="bg-brand-light-gray p-6 rounded-lg">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-brand-dark-blue mb-3">
-                    Location
-                  </h3>
-                  <p className="text-gray-700">{property.location}</p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Strategic location with excellent connectivity and proximity
-                    to major business districts and amenities.
-                  </p>
-                </div>
-                {property.locationImage && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-brand-dark-blue mb-3">
-                      Location Map
-                    </h3>
-                    <Image
-                      src={property.locationImage}
-                      alt={`${property.title} Location Map`}
-                      width={400}
-                      height={250}
-                      className="rounded-lg object-cover w-full h-[250px]"
-                    />
+
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="px-6 py-4 text-left font-semibold text-gray-900">Type</th>
+                      <th className="px-6 py-4 text-left font-semibold text-gray-900">Total Plots</th>
+                      <th className="px-6 py-4 text-left font-semibold text-gray-900">Area</th>
+                      <th className="px-6 py-4 text-left font-semibold text-gray-900">Price</th>
+                      <th className="px-6 py-4 text-left font-semibold text-gray-900">Booking Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {priceList.map((item, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-6 py-4 font-semibold text-gray-900">{item.type_name}</td>
+                        <td className="px-6 py-4 text-gray-700">{item.total_plots}</td>
+                        <td className="px-6 py-4 text-gray-700">{item.area}</td>
+                        <td className="px-6 py-4 text-gray-700">{item.price}</td>
+                        <td className="px-6 py-4 text-gray-700">{item.booking_amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Location Map */}
+      {property.location_map_image && (
+        <section className="py-16 bg-white">
+          <div className="container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="relative">
+                <Image
+                  src={property.location_map_image}
+                  alt="Location Map"
+                  width={600}
+                  height={400}
+                  className="rounded-lg object-cover w-full h-[400px]"
+                />
+              </div>
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-brand-gold mb-8">
+                  LOCATION MAP
+                </h2>
+                {locationDetails.length > 0 && (
+                  <div className="space-y-4">
+                    {locationDetails.map((detail, index) => (
+                      <div key={index} className="flex items-start">
+                        <span className="w-2 h-2 bg-gray-800 rounded-full mt-2 mr-4 flex-shrink-0"></span>
+                        <p className="text-gray-700">{detail.location_point}</p>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
             </div>
           </div>
+        </section>
+      )}
 
-          {/* Property Gallery */}
-          {property.gallery && property.gallery.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold text-brand-dark-blue mb-6">
-                Property Gallery
+      {/* Developer Info */}
+      {developerInfo.developer_name && (
+        <section className="py-16 bg-gray-50">
+          <div className="container">
+            <div className="text-center max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+                {developerInfo.developer_name.toUpperCase()}
               </h2>
-
-              {/* Main Gallery Image */}
-              <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden mb-4 group">
-                <Image
-                  src={property.gallery[currentImageIndex]}
-                  alt={`${property.title} Gallery Image ${currentImageIndex + 1}`}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-
-                {/* Navigation Arrows */}
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={24} />
-                </button>
-
-                {/* Image Counter */}
-                <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
-                  {currentImageIndex + 1} / {property.gallery.length}
-                </div>
-              </div>
-
-              {/* Thumbnail Strip */}
-              <div className="flex space-x-2 overflow-x-auto pb-2">
-                {property.gallery.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => goToImage(index)}
-                    className={`relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-200 ${
-                      index === currentImageIndex
-                        ? "ring-2 ring-brand-gold opacity-100"
-                        : "opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${property.title} Thumbnail ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+              <div className="w-16 h-1 bg-brand-gold mx-auto mb-8"></div>
+              <p className="text-gray-700 text-lg leading-relaxed">
+                {developerInfo.developer_description}
+              </p>
             </div>
-          )}
+          </div>
+        </section>
+      )}
+
+      {/* Our Commitment */}
+      {commitments.length > 0 && (
+        <section className="py-16 bg-gray-900 text-white">
+          <div className="container">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                OUR COMMITMENT
+              </h2>
+              <div className="w-16 h-1 bg-brand-gold mx-auto"></div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+              {commitments.map((commitment, index) => {
+                const IconComponent = commitmentIcons[commitment.commitment_title] || CheckCircle;
+                return (
+                  <div key={index} className="text-center">
+                    <div className="mb-4 flex justify-center">
+                      <IconComponent size={48} className="text-brand-gold" />
+                    </div>
+                    <h3 className="font-semibold text-sm">
+                      {commitment.commitment_title}
+                    </h3>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Gallery Modal */}
+      {isGalleryOpen && property.property_gallery && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Close Button */}
+            <button
+              onClick={closeGallery}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+            >
+              <X size={32} />
+            </button>
+
+            {/* Main Image */}
+            <div className="relative w-full h-full max-w-6xl max-h-[90vh] mx-4">
+              <Image
+                src={property.property_gallery[currentImageIndex].image_url}
+                alt={`Gallery Image ${currentImageIndex + 1}`}
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* Navigation */}
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300"
+            >
+              <ChevronLeft size={48} />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300"
+            >
+              <ChevronRight size={48} />
+            </button>
+
+            {/* Image Counter */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-4 py-2 rounded">
+              {currentImageIndex + 1} / {property.property_gallery.length}
+            </div>
+          </div>
         </div>
-      </section>
+      )}
     </Layout>
   );
 }
@@ -419,18 +557,50 @@ export default function PropertyDetail({ property }) {
 export async function getServerSideProps({ params }) {
   const { slug } = params;
 
-  // Fetch property from database by slug
-  const property = await fetchPropertyBySlug(slug);
+  try {
+    // Fetch property from database by slug
+    const property = await fetchPropertyBySlug(slug);
 
-  if (!property) {
+    if (!property) {
+      return {
+        notFound: true,
+      };
+    }
+
+    // Fetch additional property details
+    const supabase = require('../../lib/supabase').default;
+
+    // Fetch all related data
+    const [summaryData, highlightsData, featuresData, priceListData, locationData, developerData, commitmentsData] = await Promise.all([
+      supabase.from('property_summary').select('*').eq('property_id', property.id).single(),
+      supabase.from('property_highlights').select('*').eq('property_id', property.id).order('display_order'),
+      supabase.from('property_features').select('*').eq('property_id', property.id).order('display_order'),
+      supabase.from('property_price_list').select('*').eq('property_id', property.id).order('display_order'),
+      supabase.from('property_location_details').select('*').eq('property_id', property.id).order('display_order'),
+      supabase.from('property_developer_info').select('*').eq('property_id', property.id).single(),
+      supabase.from('property_commitments').select('*').eq('property_id', property.id).order('display_order'),
+    ]);
+
+    const propertyDetails = {
+      summary: summaryData.data || {},
+      highlights: highlightsData.data || [],
+      features: featuresData.data || [],
+      priceList: priceListData.data || [],
+      locationDetails: locationData.data || [],
+      developerInfo: developerData.data || {},
+      commitments: commitmentsData.data || []
+    };
+
+    return {
+      props: {
+        property,
+        propertyDetails,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching property details:', error);
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      property,
-    },
-  };
 }

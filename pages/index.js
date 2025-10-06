@@ -95,7 +95,7 @@ export default function Home({ newProjects, commercial, residential }) {
 
       {/* Property Sliders */}
       <FadeIn delay={0} duration={1} direction="up" distance={50}>
-        <PropertySlider title="Featured SCO Projects" properties={newProjects} />
+        <PropertySlider title="New & Upcoming Projects" properties={newProjects} />
       </FadeIn>
       
       <FadeIn delay={200} duration={1} direction="up" distance={50}>

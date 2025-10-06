@@ -46,7 +46,7 @@ export default function SCOPlots({ scoProperties }) {
       {/* SCO Properties Grid */}
       <section className="py-16">
         <div className="container">
-          <h2 className="section-title">Featured SCO Projects</h2>
+          <h2 className="section-title">New & Upcoming Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {scoProperties.length > 0 ? scoProperties.map((property) => (
               <PropertyCard key={property.id} property={property} />

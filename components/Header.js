@@ -119,7 +119,7 @@ export default function Header() {
         alt="Helios Land Logo"
         width={80}
         height={80}
-        className="rounded-full transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:z-20 sm:w-[80px] sm:h-[80px]"
+        className="transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:z-20 sm:w-[100px] sm:h-[100px]"
       />
     </div>
       </Link>
@@ -132,7 +132,7 @@ export default function Header() {
               <HoverAnimation animationType="scale" intensity="low">
                 <Link
                   href="/"
-                  className="text-brand-dark-blue hover:text-[#b8860b] transition-colors animate-fade-in"
+                  className="text-brand-dark-blue font-extrabold text-xl hover:text-[#b8860b] transition-colors animate-fade-in"
                 >
                   Home
                 </Link>
@@ -140,7 +140,7 @@ export default function Header() {
               <HoverAnimation animationType="scale" intensity="low">
                 <Link
                   href="/about"
-                  className="text-brand-dark-blue hover:text-[#b8860b] transition-colors animate-fade-in"
+                  className="text-brand-dark-blue font-extrabold text-xl hover:text-[#b8860b] transition-colors animate-fade-in"
                   style={{animationDelay: '0.1s'}}
                 >
                   Contact Us

@@ -1,10 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/admin/login": "pages/admin/login.js",
-  "/": "pages/index.js",
-  "/admin/dashboard": "pages/admin/dashboard.js",
-  "/api/properties": "pages/api/properties.js",
-  "/api/auth/login": "pages/api/auth/login.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/_document":"pages/_document.js","/about":"pages/about.html","/admin/dashboard":"pages/admin/dashboard.html","/admin/login":"pages/admin/login.html","/admin/properties/[id]":"pages/admin/properties/[id].html","/admin/properties/new":"pages/admin/properties/new.html","/api/auth/login":"pages/api/auth/login.js","/api/properties/[id]":"pages/api/properties/[id].js","/api/properties":"pages/api/properties.js","/api/setup-database":"pages/api/setup-database.js","/contact":"pages/contact.html","/residential":"pages/residential.js","/":"pages/index.js","/commercial":"pages/commercial.js","/sco-plots":"pages/sco-plots.js","/property/[slug]":"pages/property/[slug].js","/404":"pages/404.html"}
