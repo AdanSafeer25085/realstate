@@ -14,7 +14,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded transition-all duration-300 no-underline;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded transition-all duration-200 no-underline;
   }
 
   .btn-primary {
@@ -50,9 +50,32 @@
   }
 
   .property-card {
-    @apply bg-white border border-border-light rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl;
+    @apply bg-white border border-border-light rounded-lg overflow-hidden shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl;
     width: 100%;
     max-width: 100%;
+  }
+
+  /* Optimized 3D Property Card Animation */
+  .property-card-3d-container {
+    perspective: 800px;
+  }
+
+  .property-card-3d {
+    transition: transform 0.3s ease-out;
+    transform-origin: center;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .property-card-3d:hover {
+    transform: rotateX(10deg) rotateY(-10deg) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Performance optimizations */
+  .property-card img {
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .property-slide {
@@ -228,35 +251,35 @@
   }
 
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-out;
+    animation: fadeIn 0.4s ease-out;
   }
 
   .animate-fade-in-slow {
-    animation: fadeIn 1.2s ease-out;
+    animation: fadeIn 0.6s ease-out;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.6s ease-out;
+    animation: slideUp 0.3s ease-out;
   }
 
   .animate-slide-up-slow {
-    animation: slideUp 1s ease-out;
+    animation: slideUp 0.5s ease-out;
   }
 
   .animate-scale-in {
-    animation: scaleIn 0.5s ease-out;
+    animation: scaleIn 0.3s ease-out;
   }
 
   .animate-scale-in-slow {
-    animation: scaleIn 0.8s ease-out;
+    animation: scaleIn 0.4s ease-out;
   }
 
   .animate-slide-in-left {
-    animation: slideInLeft 0.8s ease-out;
+    animation: slideInLeft 0.4s ease-out;
   }
 
   .animate-slide-in-right {
-    animation: slideInRight 0.8s ease-out;
+    animation: slideInRight 0.4s ease-out;
   }
 
   .animate-zoom-in {

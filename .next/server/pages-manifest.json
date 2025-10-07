@@ -3,9 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/api/properties": "pages/api/properties.js",
-  "/admin/login": "pages/admin/login.js",
-  "/api/auth/login": "pages/api/auth/login.js",
-  "/admin/dashboard": "pages/admin/dashboard.js",
-  "/api/properties/[id]": "pages/api/properties/[id].js"
+  "/property/[slug]": "pages/property/[slug].js",
+  "/api/properties": "pages/api/properties.js"
 }
