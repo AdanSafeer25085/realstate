@@ -105,21 +105,23 @@ export default function Header() {
                   }
                 </button>
                 {openDropdown === 'residential' && (
-                  <div className="ml-6 mt-2 space-y-2 animate-fadeIn max-h-96 overflow-y-auto">
+                  <div className="ml-6 mt-2 animate-fadeIn">
                     {getPropertiesByType('residential').length > 0 ? (
-                      getPropertiesByType('residential').map((property) => (
-                        <Link
-                          key={property.id}
-                          href={`/property/${property.slug}`}
-                          className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {property.title}
-                          {property.display_in_slider && (
-                            <span className="ml-2 text-xs text-green-600">★</span>
-                          )}
-                        </Link>
-                      ))
+                      <div className="max-h-[180px] overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        {getPropertiesByType('residential').map((property) => (
+                          <Link
+                            key={property.id}
+                            href={`/property/${property.slug}`}
+                            className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {property.title}
+                            {property.display_in_slider && (
+                              <span className="ml-2 text-xs text-green-600">★</span>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
                     ) : (
                       <span className="block text-sm text-gray-500 py-1">No properties available</span>
                     )}
@@ -143,21 +145,23 @@ export default function Header() {
                   }
                 </button>
                 {openDropdown === 'commercial' && (
-                  <div className="ml-6 mt-2 space-y-2 animate-fadeIn max-h-96 overflow-y-auto">
+                  <div className="ml-6 mt-2 animate-fadeIn">
                     {getPropertiesByType('commercial').length > 0 ? (
-                      getPropertiesByType('commercial').map((property) => (
-                        <Link
-                          key={property.id}
-                          href={`/property/${property.slug}`}
-                          className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {property.title}
-                          {property.display_in_slider && (
-                            <span className="ml-2 text-xs text-green-600">★</span>
-                          )}
-                        </Link>
-                      ))
+                      <div className="max-h-[180px] overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        {getPropertiesByType('commercial').map((property) => (
+                          <Link
+                            key={property.id}
+                            href={`/property/${property.slug}`}
+                            className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {property.title}
+                            {property.display_in_slider && (
+                              <span className="ml-2 text-xs text-green-600">★</span>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
                     ) : (
                       <span className="block text-sm text-gray-500 py-1">No properties available</span>
                     )}
@@ -181,21 +185,23 @@ export default function Header() {
                   }
                 </button>
                 {openDropdown === 'upcoming' && (
-                  <div className="ml-6 mt-2 space-y-2 animate-fadeIn max-h-96 overflow-y-auto">
+                  <div className="ml-6 mt-2 animate-fadeIn">
                     {getPropertiesByType('sco').length > 0 ? (
-                      getPropertiesByType('sco').map((property) => (
-                        <Link
-                          key={property.id}
-                          href={`/property/${property.slug}`}
-                          className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {property.title}
-                          {property.display_in_slider && (
-                            <span className="ml-2 text-xs text-green-600">★</span>
-                          )}
-                        </Link>
-                      ))
+                      <div className="max-h-[180px] overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        {getPropertiesByType('sco').map((property) => (
+                          <Link
+                            key={property.id}
+                            href={`/property/${property.slug}`}
+                            className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {property.title}
+                            {property.display_in_slider && (
+                              <span className="ml-2 text-xs text-green-600">★</span>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
                     ) : (
                       <span className="block text-sm text-gray-500 py-1">No properties available</span>
                     )}
@@ -342,6 +348,25 @@ export default function Header() {
         }
         .animate-fadeIn {
           animation: fadeIn 1.5s ease-in-out forwards;
+        }
+        
+        /* Custom scrollbar styling for property dropdowns */
+        .scrollbar-thin {
+          scrollbar-width: thin;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+          width: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 3px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 3px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
         }
       `}</style>
     </>
