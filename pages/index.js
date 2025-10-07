@@ -183,14 +183,17 @@ export async function getServerSideProps() {
     fetchProperties('sco')
   ]);
 
+  // Filter properties that should be displayed in sliders
+  const filterForSlider = (properties) => properties.filter(p => p.display_in_slider !== false);
+
   // Filter featured projects for homepage
-  const featuredProps = allProperties.filter(p => p.featured);
+  const featuredProps = allProperties.filter(p => p.featured && p.display_in_slider !== false);
 
   return {
     props: {
-      newProjects: scoProps.length > 0 ? scoProps : featuredProps,
-      commercial: commercialProps,
-      residential: residentialProps,
+      newProjects: filterForSlider(scoProps.length > 0 ? scoProps : featuredProps),
+      commercial: filterForSlider(commercialProps),
+      residential: filterForSlider(residentialProps),
     },
   };
 }

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, MessageCircle, Menu, X } from 'lucide-react';
+import { Phone, MessageCircle, Menu, X, ChevronDown, ChevronUp, Home, Building, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import FadeIn from './animations/FadeIn';
 import HoverAnimation from './animations/HoverAnimation';
@@ -8,9 +8,39 @@ import HoverAnimation from './animations/HoverAnimation';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [properties, setProperties] = useState([]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    if (!isMenuOpen) {
+      setOpenDropdown(null); // Close dropdowns when opening menu
+    }
+  };
+
+  const toggleDropdown = (dropdown) => {
+    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
+  };
+
+  // Fetch properties for dropdown links
+  useEffect(() => {
+    const fetchPropertiesForDropdown = async () => {
+      try {
+        const res = await fetch('/api/properties');
+        const data = await res.json();
+        setProperties(data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+
+    fetchPropertiesForDropdown();
+  }, []);
+
+
+  // Get ALL properties by type for dropdowns
+  const getPropertiesByType = (type) => {
+    return properties.filter(p => p.type === type);
   };
 
   useEffect(() => {
@@ -50,38 +80,132 @@ export default function Header() {
 
           {/* Navigation Links */}
           <div className="mt-12 sm:mt-16">
-            <nav className="flex flex-col space-y-4 sm:space-y-6">
+            <nav className="flex flex-col space-y-3">
               <Link
                 href="/"
-                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors"
+                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
-              <Link
-                href="/residential"
-                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Residential
-              </Link>
-              <Link
-                href="/commercial"
-                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Commercial
-              </Link>
-              <Link
-                href="/sco-plots"
-                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                New & Upcoming Projects
-              </Link>
+
+              {/* Residential Dropdown */}
+              <div>
+                <button
+                  onClick={() => toggleDropdown('residential')}
+                  className="w-full flex items-center justify-between text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors py-2"
+                >
+                  <div className="flex items-center">
+                    <Home size={18} className="mr-2" />
+                    Residential
+                  </div>
+                  {openDropdown === 'residential' ?
+                    <ChevronUp size={16} /> :
+                    <ChevronDown size={16} />
+                  }
+                </button>
+                {openDropdown === 'residential' && (
+                  <div className="ml-6 mt-2 space-y-2 animate-fadeIn max-h-96 overflow-y-auto">
+                    {getPropertiesByType('residential').length > 0 ? (
+                      getPropertiesByType('residential').map((property) => (
+                        <Link
+                          key={property.id}
+                          href={`/property/${property.slug}`}
+                          className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {property.title}
+                          {property.display_in_slider && (
+                            <span className="ml-2 text-xs text-green-600">★</span>
+                          )}
+                        </Link>
+                      ))
+                    ) : (
+                      <span className="block text-sm text-gray-500 py-1">No properties available</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Commercial Dropdown */}
+              <div>
+                <button
+                  onClick={() => toggleDropdown('commercial')}
+                  className="w-full flex items-center justify-between text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors py-2"
+                >
+                  <div className="flex items-center">
+                    <Building size={18} className="mr-2" />
+                    Commercial
+                  </div>
+                  {openDropdown === 'commercial' ?
+                    <ChevronUp size={16} /> :
+                    <ChevronDown size={16} />
+                  }
+                </button>
+                {openDropdown === 'commercial' && (
+                  <div className="ml-6 mt-2 space-y-2 animate-fadeIn max-h-96 overflow-y-auto">
+                    {getPropertiesByType('commercial').length > 0 ? (
+                      getPropertiesByType('commercial').map((property) => (
+                        <Link
+                          key={property.id}
+                          href={`/property/${property.slug}`}
+                          className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {property.title}
+                          {property.display_in_slider && (
+                            <span className="ml-2 text-xs text-green-600">★</span>
+                          )}
+                        </Link>
+                      ))
+                    ) : (
+                      <span className="block text-sm text-gray-500 py-1">No properties available</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Upcoming Dropdown */}
+              <div>
+                <button
+                  onClick={() => toggleDropdown('upcoming')}
+                  className="w-full flex items-center justify-between text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors py-2"
+                >
+                  <div className="flex items-center">
+                    <Clock size={18} className="mr-2" />
+                    New & Upcoming Projects
+                  </div>
+                  {openDropdown === 'upcoming' ?
+                    <ChevronUp size={16} /> :
+                    <ChevronDown size={16} />
+                  }
+                </button>
+                {openDropdown === 'upcoming' && (
+                  <div className="ml-6 mt-2 space-y-2 animate-fadeIn max-h-96 overflow-y-auto">
+                    {getPropertiesByType('sco').length > 0 ? (
+                      getPropertiesByType('sco').map((property) => (
+                        <Link
+                          key={property.id}
+                          href={`/property/${property.slug}`}
+                          className="block text-sm text-gray-700 hover:text-[#b8860b] transition-colors py-2 pl-2 border-l-2 border-transparent hover:border-[#b8860b]"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {property.title}
+                          {property.display_in_slider && (
+                            <span className="ml-2 text-xs text-green-600">★</span>
+                          )}
+                        </Link>
+                      ))
+                    ) : (
+                      <span className="block text-sm text-gray-500 py-1">No properties available</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <Link
                 href="/about"
-                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors"
+                className="text-base sm:text-lg font-extrabold text-brand-dark-blue hover:text-[#b8860b] transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact Us

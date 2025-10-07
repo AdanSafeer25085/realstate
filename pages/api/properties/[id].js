@@ -95,6 +95,38 @@ export default async function handler(req, res) {
     }
   }
 
+  if (req.method === 'PATCH') {
+    // Update specific property fields (like display_in_slider)
+    try {
+      const { display_in_slider } = req.body;
+
+      const updateData = {};
+      if (display_in_slider !== undefined) {
+        updateData.display_in_slider = display_in_slider;
+      }
+
+      const { data: property, error } = await supabase
+        .from('properties')
+        .update({
+          ...updateData,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return res.status(200).json(property);
+
+    } catch (error) {
+      console.error('Error updating property:', error);
+      return res.status(500).json({ error: 'Failed to update property' });
+    }
+  }
+
   if (req.method === 'DELETE') {
     // Delete property - no auth check
     try {

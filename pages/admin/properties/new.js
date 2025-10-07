@@ -44,7 +44,8 @@ export default function NewProperty() {
       commitments: filteredCommitments,
       bedrooms: data.bedrooms ? parseInt(data.bedrooms) : null,
       bathrooms: data.bathrooms ? parseInt(data.bathrooms) : null,
-      featured: data.featured === 'true'
+      featured: data.featured === 'true',
+      display_in_slider: data.display_in_slider === 'true'
     };
 
     try {
@@ -249,6 +250,17 @@ export default function NewProperty() {
                   >
                     <option value="false">No</option>
                     <option value="true">Yes</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Show in Slider</label>
+                  <select
+                    {...register('display_in_slider')}
+                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="false">No (Only in dropdown)</option>
+                    <option value="true">Yes (In slider and dropdown)</option>
                   </select>
                 </div>
 

@@ -55,6 +55,29 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleToggleDisplay = async (id, currentValue) => {
+    try {
+      const res = await fetch(`/api/properties/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ display_in_slider: !currentValue }),
+      });
+
+      if (res.ok) {
+        setProperties(properties.map(p =>
+          p.id === id ? { ...p, display_in_slider: !currentValue } : p
+        ));
+      } else {
+        alert('Failed to update property display setting');
+      }
+    } catch (err) {
+      console.error('Toggle display error:', err);
+      alert('Error updating property display setting');
+    }
+  };
+
   const filteredProperties = selectedTab === 'all'
     ? properties
     : properties.filter(p => p.type === selectedTab);
@@ -126,6 +149,7 @@ export default function AdminDashboard() {
           <table className="min-w-full bg-white rounded-lg shadow">
             <thead className="bg-gray-100">
               <tr>
+                <th className="px-4 py-3 text-left">Show in Slider</th>
                 <th className="px-4 py-3 text-left">ID</th>
                 <th className="px-4 py-3 text-left">Title</th>
                 <th className="px-4 py-3 text-left">Location</th>
@@ -138,6 +162,15 @@ export default function AdminDashboard() {
             <tbody>
               {filteredProperties.map((property) => (
                 <tr key={property.id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={property.display_in_slider === true}
+                      onChange={() => handleToggleDisplay(property.id, property.display_in_slider)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                      title={property.display_in_slider ? "Property shows in sliders" : "Property only shows in dropdown menus"}
+                    />
+                  </td>
                   <td className="px-4 py-3">{property.id}</td>
                   <td className="px-4 py-3 font-medium">{property.title}</td>
                   <td className="px-4 py-3">{property.location}</td>
