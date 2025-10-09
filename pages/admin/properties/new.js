@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
+import ImageInput from '../../../components/ImageInput';
 import { useForm } from 'react-hook-form';
 
 export default function NewProperty() {
@@ -307,47 +308,52 @@ export default function NewProperty() {
               <h2 className="text-lg md:text-xl font-semibold mb-4">Images</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Main Image URL</label>
-                  <input
-                    {...register('image')}
+                  <ImageInput
+                    label="Main Image"
                     placeholder="https://example.com/image.jpg"
-                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    value={watch('image')}
+                    onChange={(value) => setValue('image', value)}
+                    name="image"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Hero Image URL</label>
-                  <input
-                    {...register('hero_image')}
+                  <ImageInput
+                    label="Hero Image"
                     placeholder="https://example.com/hero-image.jpg"
-                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    value={watch('hero_image')}
+                    onChange={(value) => setValue('hero_image', value)}
+                    name="hero_image"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Highlights Image URL</label>
-                  <input
-                    {...register('highlights_image')}
+                  <ImageInput
+                    label="Highlights Image"
                     placeholder="https://example.com/highlights-image.jpg"
-                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    value={watch('highlights_image')}
+                    onChange={(value) => setValue('highlights_image', value)}
+                    name="highlights_image"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Features Image URL</label>
-                  <input
-                    {...register('features_image')}
+                  <ImageInput
+                    label="Features Image"
                     placeholder="https://example.com/features-image.jpg"
-                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    value={watch('features_image')}
+                    onChange={(value) => setValue('features_image', value)}
+                    name="features_image"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Location Map Image URL</label>
-                  <input
-                    {...register('location_map_image')}
+                  <ImageInput
+                    label="Location Map Image"
                     placeholder="https://example.com/location-map.jpg"
-                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    value={watch('location_map_image')}
+                    onChange={(value) => setValue('location_map_image', value)}
+                    name="location_map_image"
                   />
                 </div>
               </div>
@@ -637,20 +643,24 @@ export default function NewProperty() {
             <div className="bg-white p-4 md:p-6 rounded-lg shadow">
               <h2 className="text-lg md:text-xl font-semibold mb-4">Gallery Images</h2>
               {galleryImages.map((image, index) => (
-                <div key={index} className="flex space-x-2 mb-2">
-                  <input
-                    value={image}
-                    onChange={(e) => updateGalleryImage(index, e.target.value)}
+                <div key={index} className="mb-4 p-3 border rounded">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium">Gallery Image {index + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImage(index)}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <ImageInput
+                    label=""
                     placeholder="https://example.com/gallery-image.jpg"
-                    className="flex-1 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                    value={image}
+                    onChange={(value) => updateGalleryImage(index, value)}
+                    name={`gallery_${index}`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => removeGalleryImage(index)}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
                 </div>
               ))}
               <button

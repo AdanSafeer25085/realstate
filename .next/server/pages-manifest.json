@@ -2,11 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/admin/login": "pages/admin/login.js",
-  "/admin/properties/new": "pages/admin/properties/new.js",
-  "/api/properties": "pages/api/properties.js",
-  "/api/auth/login": "pages/api/auth/login.js",
   "/admin/dashboard": "pages/admin/dashboard.js",
-  "/admin/properties/[id]": "pages/admin/properties/[id].js",
-  "/api/properties/[id]": "pages/api/properties/[id].js"
+  "/admin/login": "pages/admin/login.js",
+  "/admin/properties/new": "pages/admin/properties/new.js"
 }
