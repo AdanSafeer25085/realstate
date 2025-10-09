@@ -21,18 +21,18 @@ export default function PropertyCard({ property, isSlider = false }) {
   };
 
   return (
-    <FadeIn delay={0} duration={0.8} direction="up" distance={30}>
-      <HoverAnimation animationType="lift" intensity="medium">
-        <Link 
+    <FadeIn delay={0} duration={0.4} direction="up" distance={20}>
+      <div className="property-card-3d-container">
+        <Link
           href={`/property/${property.slug}`}
-          className={`${cardClasses} transform transition-all duration-500 ease-out block cursor-pointer group`}
+          className={`${cardClasses} property-card-3d transform transition-all duration-300 ease-out block cursor-pointer group`}
         >
           <div className="relative h-48 sm:h-48 w-full overflow-hidden">
-            <div className="absolute inset-0 transform transition-all duration-500 group-hover:scale-110 group-hover:brightness-110">
+            <div className="absolute inset-0 transform transition-all duration-300 group-hover:scale-105">
               <img
                 src={imageError ? "/images/placeholder.svg" : property.image}
                 alt={property.title}
-                className="w-full h-full object-cover transition-all duration-500"
+                className="w-full h-full object-cover transition-all duration-300"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
                 style={{
@@ -45,21 +45,21 @@ export default function PropertyCard({ property, isSlider = false }) {
               />
             </div>
             {property.featured && (
-              <div className="absolute top-2 left-2 bg-brand-gold text-white px-2 py-1 rounded text-sm font-semibold animate-bounce-in group-hover:animate-pulse-glow">
+              <div className="absolute top-2 left-2 bg-brand-gold text-white px-2 py-1 rounded text-sm font-semibold">
                 Featured
               </div>
             )}
-            <div className="absolute top-2 right-2 bg-brand-dark-blue text-white px-2 py-1 rounded text-sm capitalize animate-slide-in-right group-hover:bg-opacity-90 transition-all duration-300">
+            <div className="absolute top-2 right-2 bg-brand-dark-blue text-white px-2 py-1 rounded text-sm capitalize">
               {property.type}
             </div>
           </div>
 
           <div className="p-4">
-            <h3 className="text-lg font-semibold text-brand-dark-blue mb-2 line-clamp-2 animate-fade-in text-left group-hover:text-brand-gold transition-colors duration-300">
+            <h3 className="text-lg font-semibold text-brand-dark-blue mb-2 line-clamp-2 text-left group-hover:text-brand-gold transition-colors duration-300">
               {property.title.split(' ').map((word, index) => (
                 <span key={index}>
                   {index === 0 ? (
-                    <span className="underline decoration-brand-gold decoration-2 group-hover:decoration-white transition-all duration-300 animate-text-reveal">{word}</span>
+                    <span className="underline decoration-brand-gold decoration-2 group-hover:decoration-white transition-all duration-300">{word}</span>
                   ) : (
                     ` ${word}`
                   )}
@@ -68,7 +68,7 @@ export default function PropertyCard({ property, isSlider = false }) {
             </h3>
           </div>
         </Link>
-      </HoverAnimation>
+      </div>
     </FadeIn>
   );
 }

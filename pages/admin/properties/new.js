@@ -163,22 +163,21 @@ export default function NewProperty() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-6 md:py-12">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Add New Property</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8">Add New Property</h1>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Basic Information */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Basic Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Title *</label>
+                  <label className="block text-sm font-medium mb-2">Title</label>
                   <input
-                    {...register('title', { required: 'Title is required' })}
+                    {...register('title')}
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                   />
-                  {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
                 </div>
 
                 <div>
@@ -191,46 +190,42 @@ export default function NewProperty() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Location *</label>
+                  <label className="block text-sm font-medium mb-2">Location</label>
                   <input
-                    {...register('location', { required: 'Location is required' })}
+                    {...register('location')}
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                   />
-                  {errors.location && <span className="text-red-500 text-sm">{errors.location.message}</span>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Price *</label>
+                  <label className="block text-sm font-medium mb-2">Price</label>
                   <input
-                    {...register('price', { required: 'Price is required' })}
+                    {...register('price')}
                     placeholder="e.g., ₹1,85,00,000"
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                   />
-                  {errors.price && <span className="text-red-500 text-sm">{errors.price.message}</span>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Slug *</label>
+                  <label className="block text-sm font-medium mb-2">Slug</label>
                   <input
-                    {...register('slug', { required: 'Slug is required' })}
+                    {...register('slug')}
                     placeholder="e.g., property-name-location"
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                   />
-                  {errors.slug && <span className="text-red-500 text-sm">{errors.slug.message}</span>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Type *</label>
+                  <label className="block text-sm font-medium mb-2">Type</label>
                   <select
-                    {...register('type', { required: 'Type is required' })}
+                    {...register('type')}
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Type</option>
                     <option value="commercial">Commercial</option>
                     <option value="residential">Residential</option>
-                    <option value="sco">SCO</option>
+                    <option value="New & upcoming projects">New & upcoming projects</option>
                   </select>
-                  {errors.type && <span className="text-red-500 text-sm">{errors.type.message}</span>}
                 </div>
 
                 <div>
@@ -308,9 +303,9 @@ export default function NewProperty() {
             </div>
 
             {/* Images */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Images</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Images</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Main Image URL</label>
                   <input
@@ -359,8 +354,8 @@ export default function NewProperty() {
             </div>
 
             {/* Property Summary */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Property Summary</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Property Summary</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Developer</label>
@@ -428,8 +423,8 @@ export default function NewProperty() {
             </div>
 
             {/* Developer Information */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Developer Information</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Developer Information</h2>
               <div className="grid grid-cols-1 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Developer Name</label>
@@ -453,8 +448,8 @@ export default function NewProperty() {
             </div>
 
             {/* Highlights */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Highlights</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Highlights</h2>
               {highlights.map((highlight, index) => (
                 <div key={index} className="flex space-x-2 mb-2">
                   <input
@@ -482,8 +477,8 @@ export default function NewProperty() {
             </div>
 
             {/* Features */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Features</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Features</h2>
               {features.map((feature, index) => (
                 <div key={index} className="flex space-x-2 mb-2">
                   <input
@@ -511,10 +506,10 @@ export default function NewProperty() {
             </div>
 
             {/* Price List */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Price List & Area</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Price List & Area</h2>
               {priceList.map((item, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 p-4 border rounded">
+                <div key={index} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-4 p-3 md:p-4 border rounded">
                   <div>
                     <label className="block text-sm font-medium mb-2">Type</label>
                     <input
@@ -560,11 +555,11 @@ export default function NewProperty() {
                       className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="flex items-end">
+                  <div className="flex items-end sm:col-span-2 md:col-span-1">
                     <button
                       type="button"
                       onClick={() => removePriceListItem(index)}
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                      className="w-full md:w-auto px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
                     >
                       Remove
                     </button>
@@ -581,8 +576,8 @@ export default function NewProperty() {
             </div>
 
             {/* Location Details */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Location Details</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Location Details</h2>
               {locationDetails.map((detail, index) => (
                 <div key={index} className="flex space-x-2 mb-2">
                   <input
@@ -610,8 +605,8 @@ export default function NewProperty() {
             </div>
 
             {/* Our Commitments */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Our Commitments</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Our Commitments</h2>
               {commitments.map((commitment, index) => (
                 <div key={index} className="flex space-x-2 mb-2">
                   <input
@@ -639,8 +634,8 @@ export default function NewProperty() {
             </div>
 
             {/* Gallery Images */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Gallery Images</h2>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Gallery Images</h2>
               {galleryImages.map((image, index) => (
                 <div key={index} className="flex space-x-2 mb-2">
                   <input
@@ -667,18 +662,18 @@ export default function NewProperty() {
               </button>
             </div>
 
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+                className="w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 text-sm md:text-base"
               >
                 {loading ? 'Creating...' : 'Create Property'}
               </button>
               <button
                 type="button"
                 onClick={() => router.push('/admin/dashboard')}
-                className="px-6 py-3 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm md:text-base"
               >
                 Cancel
               </button>

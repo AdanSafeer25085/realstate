@@ -276,7 +276,7 @@ export default function PropertyDetail({ property, propertyDetails }) {
           <div className="container">
             <div className="max-w-4xl">
               <div className="mb-4">
-                <span className="text-sm uppercase tracking-wider text-gray-600">
+                <span className="text-xl uppercase tracking-wider text-gray-600">
                   BUILTUP SCO PLOTS
                 </span>
               </div>

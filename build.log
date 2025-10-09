@@ -1,0 +1,47 @@
+
+> sco-plots-realestate@1.0.0 build
+> next build
+
+   Skipping linting
+   Checking validity of types ...
+   ▲ Next.js 14.0.0
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8) 
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (pages)                              Size     First Load JS
+┌ λ /                                      4.18 kB         101 kB
+├   /_app                                  0 B            82.3 kB
+├ ○ /404                                   180 B          82.5 kB
+├ ○ /about (684 ms)                        2.24 kB        99.2 kB
+├ ○ /admin/dashboard (682 ms)              3.52 kB         100 kB
+├ ○ /admin/login (673 ms)                  1.3 kB         98.3 kB
+├ ○ /admin/properties/[id] (721 ms)        2.01 kB         108 kB
+├ ○ /admin/properties/new (743 ms)         3.12 kB         109 kB
+├ λ /api/auth/login                        0 B            82.3 kB
+├ λ /api/properties                        0 B            82.3 kB
+├ λ /api/properties/[id]                   0 B            82.3 kB
+├ λ /api/setup-database                    0 B            82.3 kB
+├ λ /commercial                            2.19 kB        99.1 kB
+├ ○ /contact (648 ms)                      2.53 kB        99.5 kB
+├ λ /property/[slug]                       3.88 kB         101 kB
+├ λ /residential                           2.56 kB        99.5 kB
+└ λ /sco-plots                             3.04 kB         100 kB
++ First Load JS shared by all              91.3 kB
+  ├ chunks/framework-bbecb7d54330d002.js   45.6 kB
+  ├ chunks/main-bdfcfc23ca93d033.js        35.4 kB
+  ├ chunks/pages/_app-e7aa141dfe6a9796.js  421 B
+  ├ chunks/webpack-fa99431b15635937.js     836 B
+  └ css/fc688a185e605986.css               9.01 kB
+
+○  (Static)   prerendered as static HTML
+λ  (Dynamic)  server-rendered on demand using Node.js
+
