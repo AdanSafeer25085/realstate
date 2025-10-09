@@ -83,7 +83,9 @@ export default function AdminDashboard() {
 
   // Filter properties by tab and search term
   const filteredProperties = properties.filter(property => {
-    const matchesTab = selectedTab === 'all' || property.type === selectedTab;
+    const matchesTab = selectedTab === 'all' ||
+      (selectedTab === 'sco' && property.type === 'New & upcoming projects') ||
+      (selectedTab !== 'sco' && property.type === selectedTab);
     const matchesSearch = property.title.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesTab && matchesSearch;
   });
@@ -182,7 +184,7 @@ export default function AdminDashboard() {
               onClick={() => setSelectedTab('sco')}
               className={`px-3 py-1.5 md:px-4 md:py-2 rounded text-sm md:text-base ${selectedTab === 'sco' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
             >
-              SCO ({properties.filter(p => p.type === 'sco' && p.title.toLowerCase().includes(searchTerm.toLowerCase())).length})
+              SCO ({properties.filter(p => p.type === 'New & upcoming projects' && p.title.toLowerCase().includes(searchTerm.toLowerCase())).length})
             </button>
           </div>
           <button

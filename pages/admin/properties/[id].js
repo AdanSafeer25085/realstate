@@ -7,7 +7,43 @@ import { useForm } from 'react-hook-form';
 export default function EditProperty() {
   const router = useRouter();
   const { id } = router.query;
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+    defaultValues: {
+      title: '',
+      location: '',
+      price: '',
+      image: '',
+      location_image: '',
+      type: '',
+      slug: '',
+      area: '',
+      description: '',
+      specifications: '',
+      bedrooms: '',
+      bathrooms: '',
+      featured: 'false',
+      special_offer: '',
+      created_by: '',
+      hero_image: '',
+      highlights_image: '',
+      features_image: '',
+      location_map_image: '',
+      property_subtitle: '',
+      detailed_description: '',
+      display_in_slider: 'true',
+      developer: '',
+      property_type: '',
+      summary_type: '',
+      land_area: '',
+      current_status: '',
+      ownership: '',
+      completion_year: '',
+      tower_floors: '',
+      units_per_floor: '',
+      total_units: '',
+      rera_number: ''
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [galleryImages, setGalleryImages] = useState(['']);
   const [highlights, setHighlights] = useState(['']);
@@ -30,8 +66,25 @@ export default function EditProperty() {
 
   const fetchProperty = async () => {
     try {
+      console.log('Fetching property with ID:', id);
       const res = await fetch(`/api/properties/${id}`);
+
+      console.log('Response status:', res.status);
+      console.log('Response ok:', res.ok);
+
+      if (!res.ok) {
+        if (res.status === 404) {
+          console.error(`Property with ID ${id} not found`);
+          alert(`Property with ID ${id} not found. Please check if this property exists in the database.`);
+          return;
+        }
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
       const property = await res.json();
+      console.log('Property data loaded:', property);
+      console.log('Property keys with null values:',
+        Object.keys(property).filter(key => property[key] === null));
 
       // Set form values
       Object.keys(property).forEach(key => {
@@ -51,26 +104,30 @@ export default function EditProperty() {
           setValue(key, property[key] ? 'true' : 'false');
         } else if (key === 'display_in_slider') {
           setValue(key, property[key] ? 'true' : 'false');
-        } else if (property[key] !== null) {
-          setValue(key, property[key]);
+        } else {
+          // Ensure we never pass null or undefined to form fields
+          const value = property[key];
+          setValue(key, (value !== null && value !== undefined) ? value : '');
         }
       });
+
+      console.log('Form values set successfully');
     } catch (err) {
       console.error('Error fetching property:', err);
-      alert('Failed to load property');
+      alert(`Failed to load property: ${err.message}`);
     }
   };
 
   const onSubmit = async (data) => {
     setLoading(true);
 
-    // Filter out empty arrays
-    const gallery = galleryImages.filter(img => img.trim() !== '');
-    const filteredHighlights = highlights.filter(h => h.trim() !== '');
-    const filteredFeatures = features.filter(f => f.trim() !== '');
-    const filteredPriceList = priceList.filter(p => p.type_name.trim() !== '');
-    const filteredLocationDetails = locationDetails.filter(l => l.trim() !== '');
-    const filteredCommitments = commitments.filter(c => c.trim() !== '');
+    // Filter out empty arrays - handle null/undefined values safely
+    const gallery = galleryImages.filter(img => img && typeof img === 'string' && img.trim() !== '');
+    const filteredHighlights = highlights.filter(h => h && typeof h === 'string' && h.trim() !== '');
+    const filteredFeatures = features.filter(f => f && typeof f === 'string' && f.trim() !== '');
+    const filteredPriceList = priceList.filter(p => p && p.type_name && typeof p.type_name === 'string' && p.type_name.trim() !== '');
+    const filteredLocationDetails = locationDetails.filter(l => l && typeof l === 'string' && l.trim() !== '');
+    const filteredCommitments = commitments.filter(c => c && typeof c === 'string' && c.trim() !== '');
 
     const propertyData = {
       ...data,
@@ -86,6 +143,8 @@ export default function EditProperty() {
       display_in_slider: data.display_in_slider === 'true'
     };
 
+    console.log('Submitting property data:', propertyData);
+
     try {
       const res = await fetch(`/api/properties/${id}`, {
         method: 'PUT',
@@ -95,16 +154,28 @@ export default function EditProperty() {
         body: JSON.stringify(propertyData),
       });
 
+      console.log('Response status:', res.status);
+      console.log('Response headers:', res.headers);
+
       if (res.ok) {
+        const result = await res.json();
+        console.log('Property updated successfully:', result);
         router.push('/admin/dashboard');
       } else {
         const error = await res.json();
+        console.error('Server error response:', error);
+        console.error('Full response:', res);
         alert('Error updating property: ' + (error.error || 'Unknown error'));
         setLoading(false);
       }
     } catch (err) {
-      console.error('Error:', err);
-      alert('Failed to update property');
+      console.error('Network/Parse error:', err);
+      console.error('Error details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack
+      });
+      alert('Failed to update property: ' + err.message);
       setLoading(false);
     }
   };

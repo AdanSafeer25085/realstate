@@ -180,7 +180,7 @@ export async function getServerSideProps() {
     fetchProperties(),
     fetchProperties('commercial'),
     fetchProperties('residential'),
-    fetchProperties('sco')
+    fetchProperties('New & upcoming projects')
   ]);
 
   // Filter properties that should be displayed in sliders

@@ -211,7 +211,7 @@ export default function SCOPlots({ scoProperties }) {
 }
 
 export async function getServerSideProps() {
-  const scoProperties = await fetchProperties('sco');
+  const scoProperties = await fetchProperties('New & upcoming projects');
   return {
     props: {
       scoProperties,
