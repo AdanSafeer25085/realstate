@@ -75,16 +75,52 @@ export default async function handler(req, res) {
         ...propertyData
       } = req.body;
 
-      // Insert main property
+      // Generate unique slug if one isn't provided or if it conflicts
+      let uniqueSlug = propertyData.slug;
+      if (!uniqueSlug || uniqueSlug.trim() === '') {
+        // Generate slug from title if none provided
+        uniqueSlug = propertyData.title
+          ?.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .substring(0, 50) || 'property';
+      }
+
+      // Check if slug exists and make it unique
+      let slugAttempt = uniqueSlug;
+      let slugCounter = 1;
+      let slugExists = true;
+
+      while (slugExists) {
+        const { data: existingProperty } = await supabase
+          .from('properties')
+          .select('id')
+          .eq('slug', slugAttempt)
+          .single();
+
+        if (!existingProperty) {
+          slugExists = false;
+          uniqueSlug = slugAttempt;
+        } else {
+          slugAttempt = `${uniqueSlug}-${slugCounter}`;
+          slugCounter++;
+        }
+      }
+
+      console.log('Generated unique slug:', uniqueSlug);
+
+      // Insert main property with unique slug
       const { data: property, error: propError } = await supabase
         .from('properties')
         .insert({
-          ...propertyData
+          ...propertyData,
+          slug: uniqueSlug
         })
         .select()
         .single();
 
       if (propError) {
+        console.error('Error creating property:', propError);
         throw propError;
       }
 

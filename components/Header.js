@@ -186,9 +186,9 @@ export default function Header() {
                 </button>
                 {openDropdown === 'upcoming' && (
                   <div className="ml-6 mt-2 animate-fadeIn">
-                    {getPropertiesByType('sco').length > 0 ? (
+                    {getPropertiesByType('New & upcoming projects').length > 0 ? (
                       <div className="max-h-[180px] overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                        {getPropertiesByType('sco').map((property) => (
+                        {getPropertiesByType('New & upcoming projects').map((property) => (
                           <Link
                             key={property.id}
                             href={`/property/${property.slug}`}

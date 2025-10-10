@@ -184,7 +184,7 @@ export default function AdminDashboard() {
               onClick={() => setSelectedTab('sco')}
               className={`px-3 py-1.5 md:px-4 md:py-2 rounded text-sm md:text-base ${selectedTab === 'sco' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
             >
-              SCO ({properties.filter(p => p.type === 'New & upcoming projects' && p.title.toLowerCase().includes(searchTerm.toLowerCase())).length})
+              New & Upcoming ({properties.filter(p => p.type === 'New & upcoming projects' && p.title.toLowerCase().includes(searchTerm.toLowerCase())).length})
             </button>
           </div>
           <button
