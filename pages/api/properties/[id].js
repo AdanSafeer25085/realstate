@@ -55,7 +55,7 @@ export default async function handler(req, res) {
           .eq('property_id', id)
           .order('display_order');
 
-        highlights = highlightsData ? highlightsData.map(item => item.text || item.content || item.highlight) : [];
+        highlights = highlightsData ? highlightsData.map(item => item.text || item.content || item.highlight || item.highlight_text) : [];
         // console.log('Highlights loaded:', highlights.length, 'items');
       } catch (highlightsError) {
         console.error('Error loading highlights:', highlightsError);
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
           .eq('property_id', id)
           .order('display_order');
 
-        features = featuresData ? featuresData.map(item => item.text || item.content || item.feature) : [];
+        features = featuresData ? featuresData.map(item => item.text || item.content || item.feature || item.feature_text) : [];
         // console.log('Features loaded:', features.length, 'items');
       } catch (featuresError) {
         console.error('Error loading features:', featuresError);
@@ -83,10 +83,47 @@ export default async function handler(req, res) {
           .eq('property_id', id)
           .order('display_order');
 
-        commitments = commitmentsData ? commitmentsData.map(item => item.text || item.content || item.commitment) : [];
+        commitments = commitmentsData ? commitmentsData.map(item => item.text || item.content || item.commitment || item.commitment_text) : [];
         // console.log('Commitments loaded:', commitments.length, 'items');
       } catch (commitmentsError) {
         console.error('Error loading commitments:', commitmentsError);
+      }
+
+      let priceList = [];
+      let locationDetails = [];
+
+      try {
+        // Get price list
+        const { data: priceListData } = await supabase
+          .from('property_price_list')
+          .select('*')
+          .eq('property_id', id)
+          .order('display_order');
+
+        priceList = priceListData ? priceListData.map(item => ({
+          type_name: item.type_name || '',
+          total_plots: item.total_plots || '',
+          area: item.area || '',
+          price: item.price || '',
+          booking_amount: item.booking_amount || ''
+        })) : [];
+        // console.log('Price list loaded:', priceList.length, 'items');
+      } catch (priceListError) {
+        console.error('Error loading price list:', priceListError);
+      }
+
+      try {
+        // Get location details
+        const { data: locationDetailsData } = await supabase
+          .from('property_location_details')
+          .select('*')
+          .eq('property_id', id)
+          .order('display_order');
+
+        locationDetails = locationDetailsData ? locationDetailsData.map(item => item.location_point || item.text || item.content) : [];
+        // console.log('Location details loaded:', locationDetails.length, 'items');
+      } catch (locationDetailsError) {
+        console.error('Error loading location details:', locationDetailsError);
       }
 
       const result = {
@@ -95,8 +132,8 @@ export default async function handler(req, res) {
         highlights,
         features,
         commitments,
-        priceList: [], // Will implement if needed
-        locationDetails: [] // Will implement if needed
+        priceList,
+        locationDetails
       };
 
       // console.log('Final result structure:', Object.keys(result));
@@ -133,7 +170,8 @@ export default async function handler(req, res) {
         'created_by', 'hero_image', 'highlights_image', 'features_image', 'location_map_image',
         'property_subtitle', 'detailed_description', 'display_in_slider', 'developer',
         'property_type', 'summary_type', 'land_area', 'current_status', 'ownership',
-        'completion_year', 'tower_floors', 'units_per_floor', 'total_units', 'rera_number'
+        'completion_year', 'tower_floors', 'units_per_floor', 'total_units', 'rera_number',
+        'nearest_landmark', 'developer_name', 'developer_description'
       ];
 
       // Filter propertyData to only include allowed fields and handle UUID fields
@@ -226,7 +264,7 @@ export default async function handler(req, res) {
         if (highlights && highlights.length > 0) {
           const highlightData = highlights.map((text, index) => ({
             property_id: property.id,
-            text: text,
+            highlight_text: text,
             display_order: index
           }));
 
@@ -254,7 +292,7 @@ export default async function handler(req, res) {
         if (features && features.length > 0) {
           const featureData = features.map((text, index) => ({
             property_id: property.id,
-            text: text,
+            feature_text: text,
             display_order: index
           }));
 
@@ -282,7 +320,7 @@ export default async function handler(req, res) {
         if (commitments && commitments.length > 0) {
           const commitmentData = commitments.map((text, index) => ({
             property_id: property.id,
-            text: text,
+            commitment_text: text,
             display_order: index
           }));
 
@@ -292,6 +330,66 @@ export default async function handler(req, res) {
 
           if (commitmentsError) {
             console.error('Error updating commitments:', commitmentsError);
+          }
+        }
+      }
+
+      // Update price list if provided
+      if (priceList !== undefined) {
+        // console.log('Updating price list:', priceList);
+
+        // Delete existing price list
+        await supabase
+          .from('property_price_list')
+          .delete()
+          .eq('property_id', id);
+
+        // Insert new price list
+        if (priceList && priceList.length > 0) {
+          const priceListData = priceList.map((item, index) => ({
+            property_id: property.id,
+            type_name: item.type_name || '',
+            total_plots: item.total_plots ? parseInt(item.total_plots) : null,
+            area: item.area || '',
+            price: item.price || '',
+            booking_amount: item.booking_amount || '',
+            display_order: index
+          }));
+
+          const { error: priceListError } = await supabase
+            .from('property_price_list')
+            .insert(priceListData);
+
+          if (priceListError) {
+            console.error('Error updating price list:', priceListError);
+          }
+        }
+      }
+
+      // Update location details if provided
+      if (locationDetails !== undefined) {
+        // console.log('Updating location details:', locationDetails);
+
+        // Delete existing location details
+        await supabase
+          .from('property_location_details')
+          .delete()
+          .eq('property_id', id);
+
+        // Insert new location details
+        if (locationDetails && locationDetails.length > 0) {
+          const locationDetailsData = locationDetails.map((text, index) => ({
+            property_id: property.id,
+            location_point: text,
+            display_order: index
+          }));
+
+          const { error: locationDetailsError } = await supabase
+            .from('property_location_details')
+            .insert(locationDetailsData);
+
+          if (locationDetailsError) {
+            console.error('Error updating location details:', locationDetailsError);
           }
         }
       }

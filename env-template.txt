@@ -1,0 +1,20 @@
+# Copy this content to a new file called .env.local in your project root
+
+# Supabase Configuration
+# Replace these with your actual Supabase project credentials
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+
+# Instructions:
+# 1. Go to https://supabase.com/dashboard
+# 2. Select your project
+# 3. Go to Settings → API
+# 4. Copy the Project URL and Anon Key
+# 5. Replace the placeholder values above with your actual credentials
+# 6. Save this file as .env.local (not .env.local.txt)
+# 7. Restart your development server with: npm run dev
+
+# Example of what it should look like:
+# NEXT_PUBLIC_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprbG1ub3AiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY5ODc2ODAwMCwiZXhwIjoyMDE0MzQ0MDAwfQ.example_signature_here
