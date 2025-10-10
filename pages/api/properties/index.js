@@ -151,7 +151,7 @@ export default async function handler(req, res) {
             property_id: propertyId,
             developer,
             property_type,
-            type: summary_type,
+            summary_type,
             area: propertyData.area,
             price: propertyData.price,
             land_area,
@@ -256,7 +256,7 @@ export default async function handler(req, res) {
       if (commitments && commitments.length > 0) {
         const commitmentData = commitments.map((text, index) => ({
           property_id: propertyId,
-          commitment_title: text,
+          commitment_text: text,
           display_order: index
         }));
 

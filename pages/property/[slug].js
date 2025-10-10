@@ -208,7 +208,7 @@ export default function PropertyDetail({ property, propertyDetails }) {
                 <div className="space-y-4">
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">Type</h3>
-                    <p className="text-gray-700">{summary.type || property.type}</p>
+                    <p className="text-gray-700">{summary.summary_type || property.type}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">Land Area</h3>
@@ -490,7 +490,7 @@ export default function PropertyDetail({ property, propertyDetails }) {
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
               {commitments.map((commitment, index) => {
-                const IconComponent = commitmentIcons[commitment.commitment_title] || CheckCircle;
+                const IconComponent = commitmentIcons[commitment.commitment_text] || CheckCircle;
                 return (
                   <div key={index} className="text-center">
                     <div className="mb-4 flex justify-center">
